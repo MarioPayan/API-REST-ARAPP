@@ -2,6 +2,7 @@ from apirest.models import Comment, User, Vote
 from rest_framework import viewsets
 from apirest.serializers import CommentSerializerCreate, CommentSerializerDetail, UserSerializerDetail, UserSerializerCreate
 from rest_framework.decorators import list_route, detail_route
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import generics
 
@@ -9,7 +10,7 @@ from rest_framework import generics
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializerCreate
     queryset = Comment.objects.all()
-    
+        
     @detail_route()
     def upvote(self, request, pk):
         comment = Comment.objects.get(id=pk)
@@ -53,13 +54,6 @@ class CommentViewSet(viewsets.ModelViewSet):
         else:
             return Response({"status": "not clearvoted"})
 
-class CommentView(generics.ListAPIView):
-    serializer_class = CommentSerializerDetail
-
-    def get_queryset(self):
-        marker = self.kwargs['marker']
-        return Comment.objects.filter(marker=marker)
-
 
 class CommentByMarkerView(generics.ListAPIView):
     serializer_class = CommentSerializerDetail
@@ -88,6 +82,11 @@ class CommentByMarkerViewOrderDate(generics.ListAPIView):
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializerDetail
     queryset = User.objects.all()
+    
+    @list_route(methods=['get'], url_path='(?P<username>\w+)')
+    def getByUsername(self, request, username ):
+        user = get_object_or_404(User, username=username)
+        return Response(UserSerializerDetail(user).data)
     
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):

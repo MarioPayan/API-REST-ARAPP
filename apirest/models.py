@@ -6,8 +6,8 @@ class Comment(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     body = models.CharField(max_length=180)
     marker = models.CharField(max_length=30)
-    date = models.DateField()
-    karma = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+    karma = models.IntegerField(default=0)
     current_user = 0
 
     def set_user(self, user_id):

@@ -12,7 +12,7 @@ router.register(r'users', views.UserViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url('^comments/marker/(?P<marker>.+)/$', CommentByMarkerView.as_view()),
-    url('^comments/marker/(?P<marker>.+)/order-date/$', CommentByMarkerViewOrderDate.as_view()),
-    url('^comments/marker/(?P<marker>.+)/order-karma/$', CommentByMarkerViewOrderKarma.as_view()),
+    url('^comments-marker/(?P<marker>.+)/$', CommentByMarkerView.as_view()),
+    url('^comments-marker-by-date/(?P<marker>.+)/$', CommentByMarkerViewOrderDate.as_view()),
+    url('^comments-marker-by-karma/(?P<marker>.+)/$', CommentByMarkerViewOrderKarma.as_view()),
 ]

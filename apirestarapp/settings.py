@@ -25,7 +25,8 @@ SECRET_KEY = '6&uyq-3lco6jhn-!7d82m-#kfx&nw@+f^exqxgbcdo&q1_n0n2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django-rest-mariopayan.c9users.io']
+# ALLOWED_HOSTS = ['django-rest-mariopayan.c9users.io']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -105,8 +106,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAdminUser',
-    ],
+        'rest_framework.permissions.AllowAny',
+        ],
     'PAGE_SIZE': 10
 }
 
