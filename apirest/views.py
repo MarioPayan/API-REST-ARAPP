@@ -1,10 +1,11 @@
 from apirest.models import Comment, User, Vote
 from rest_framework import viewsets
-from apirest.serializers import CommentSerializerCreate, CommentSerializerDetail, UserSerializerDetail, UserSerializerCreate
+from apirest.serializers import CommentSerializerCreate, CommentSerializerDetail, UserSerializerDetail, UserSerializerCreate, VoteSerializerDetail, CommentSerializerKarma
 from rest_framework.decorators import list_route, detail_route
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import generics
+from django.db.models import Count, Min, Sum, Avg
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -93,3 +94,15 @@ class UserViewSet(viewsets.ModelViewSet):
             return UserSerializerCreate
         else:
             return UserSerializerDetail
+
+class VotesViewSet(generics.GenericAPIView):
+    serializer_class = CommentSerializerKarma    
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        return Comment.objects.all().filter(owner=User.objects.get(username=username)).annotate(total_karma=Sum('karma'))
+    
+    def get(self, request, username):
+        self.queryset = Comment.objects.all().filter(owner=User.objects.get(username=username)).annotate(total_karma=Sum('karma'))
+        self.obj = get_object_or_404(self.queryset)
+        return Response({"total_karma": self.obj.total_karma})
